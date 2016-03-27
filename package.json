@@ -2,11 +2,14 @@
   "name": "node_practice",
   "version": "1.0.0",
   "description": "Analyrics",
-  "engines":{"node":"4.1.2"},
+  "engines": {
+    "node": "4.1.2"
+  },
   "main": "main.js",
   "dependencies": {
     "ejs": "^2.4.1",
     "express": "^4.13.4",
+    "lastfmapi": "^0.1.1",
     "musicmatch": "^0.2.5",
     "scraperjs": "^1.2.0",
     "underscore": "^1.8.3"
