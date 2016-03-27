@@ -1,7 +1,8 @@
 {
   "name": "node_practice",
   "version": "1.0.0",
-  "description": "Practising node.",
+  "description": "Analyrics",
+  "engines":{"node":"4.1.2"},
   "main": "main.js",
   "dependencies": {
     "ejs": "^2.4.1",
@@ -12,7 +13,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node main.js"
   },
   "author": "Mihir Mathur",
   "license": "ISC"

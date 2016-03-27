@@ -6,13 +6,25 @@
 </head>
 <body>
 	<div class="container">
-		<input id = "artist" type="text" placeholder="Artist"></input><br>
-		<input id = "song" type="text" placeholder="Songname"></input><br>
-		<button id = "submit" type="button" class="btn btn-primary">Primary</button>
-		<h1><%= title %></h1>
-		<br>
-		<br>
+		<div class="col-12-md">
+			<center>
+				<h1><%= title %></h1>
+				<br>
+				<input id = "artist" type="text" placeholder="Artist"></input><br>
+				<input id = "song" type="text" placeholder="Songname"></input><br>
+				<button id = "submit" type="button" class="btn btn-primary">Primary</button>
+				<br>
+				<br>
+			</center>
+		</div>
 	</div>
 </body>
-
+<script type="text/javascript">
+	$('#submit').click(function(){
+		var artist = $('#artist').val();
+		var song = $('#song').val();
+		window.location.href = '/'+artist+'/'+song;
+	});
+	
+</script>
 </html>
