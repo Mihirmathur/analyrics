@@ -1,0 +1,19 @@
+{
+  "name": "node_practice",
+  "version": "1.0.0",
+  "description": "Practising node.",
+  "main": "main.js",
+  "dependencies": {
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "musicmatch": "^0.2.5",
+    "scraperjs": "^1.2.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mihir Mathur",
+  "license": "ISC"
+}

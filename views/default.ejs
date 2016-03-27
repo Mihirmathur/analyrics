@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<% include partials/head.ejs %>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<!-- <input id = "artist" type="text" placeholder="Artist"></input><br>
+		<input id = "song" type="text" placeholder="Songname"></input><br>
+		<button id = "submit" type="button" class="btn btn-primary">Primary</button> -->
+		<center><h1><%= title %></h1></center>
+		
+		<br>
+		<div id="myDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
+		<br>
+		<pre><p style="text-align: center;"><%= lyrics %></p></pre>
+	</div>
+</body>
+
+<script type="text/javascript">
+	var data = <%- JSON.stringify(chart) %>;
+	var layout = {
+		title: 'Frequency of Words'
+	};
+	Plotly.newPlot('myDiv', data, layout);
+</script>
+</html>
