@@ -5,6 +5,13 @@ var scraperjs = require('scraperjs');
 var _ = require('underscore');
 var lastfm = require('lastfmapi');
 var Promise = require('promise');
+var database = require('./database');
+var mongoose = require('mongoose'); // for the database
+mongoose.connect(database.url);
+var Artist = require('./models/Artist.js');
+
+
+
 
 lfm = new lastfm({
 	'api_key' : '0989b876a250ebf487e96365832bde72',
@@ -137,6 +144,18 @@ app.get('/:artist?', function(req, res){
 
 
 app.get('/:artist?/:name?', function(req, res){
+	// test saving code
+	var artista = new Artist();
+	artista.name = "test";
+	artista.top_tracks = ['one','two','three'];
+	artista.words = [{word: 'the', frequency: 100}];
+	artista.save(function(err) {
+		if (err){
+
+		}
+		console.log("Test artist saved");
+	});
+
 	var name = req.params.name;
 	var artist = req.params.artist;
 	music.trackSearch({q:name, q_artist:artist}).then(function(data){
