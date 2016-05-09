@@ -5,6 +5,9 @@ var scraperjs = require('scraperjs');
 var _ = require('underscore');
 var lastfm = require('lastfmapi');
 var Promise = require('promise');
+var async = require('async');
+var combinedString;
+
 
 lfm = new lastfm({
 	'api_key' : '0989b876a250ebf487e96365832bde72',
@@ -51,35 +54,42 @@ function getTracks(artistName){
 
 function getLyrics(artistName, songName){
 	return new Promise(function(res, rej){
-		music.matcherLyrics({q_track:songName,q_artist:artistName})
+		music.trackSearch({q: songName, q_artist: artistName})
 			.then(function(data){
-			res(data.message.body.lyrics.lyrics_body);
+				trackList = data.message.body.track_list;
+				trackID = trackList[0].track.track_id;
+				music.trackLyrics({track_id: trackID}).then(function(data){
+				res(data.message.body.lyrics.lyrics_body);
 			}).catch(function(err){
 			rej(err);
-})
+				})
+			});
 	});
 }
 
 app.get('/:artist?', function(req, res){
+	var lyricsArray = [];
 	var i = 0;
 	console.log("ARTIST TOP 10");
 	var artistName = req.params.artist;
 	var tracksPromise = getTracks(artistName);
-	// var lyricsPromise = getLyrics("Kanye", "Power");
+	// var lyricsPromise = getLyrics("Kanye West", "Heartless");
 	// lyricsPromise.then(function(response){
 	// 	console.log(response);
 	// })
-	tracksPromise.then(function(response){
-		response.forEach(function(listItem, index){
+	tracksPromise.then(function(topTracksList){
+		// console.log(topTracksList);
+		topTracksList.forEach(function(songName, index){
 			if(index < 10){
-				// console.log(listItem);
-				var lyricsPromise = getLyrics(artistName, listItem);
-				lyricsPromise.then(function(response){
-					console.log("SONG NAME: " + listItem);
-					console.log ("=======")
-					console.log(response);
-					console.log("========");
-				})
+				var lyricsPromise = getLyrics(artistName, songName);
+				lyricsPromise.then(function(songLyrics, rej){
+					lyricsArray.push(songLyrics); //pushes lyrics into array
+					if(lyricsArray.length == 10){ //will only log if all 10 songs have been pushed to array
+						console.log("GOT ALL 10 LYRICS");
+						var JSONLyrics = JSON.stringify(lyricsArray);
+						console.log(JSONLyrics)
+					}
+				});
 			}
 		})
 	});
@@ -133,8 +143,6 @@ app.get('/:artist?', function(req, res){
 // 		}
 // 		);
 // });
-
-
 
 app.get('/:artist?/:name?', function(req, res){
 	var name = req.params.name;
