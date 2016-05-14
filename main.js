@@ -82,7 +82,7 @@ app.get('/:artist?', function(req, res){
 		if(err) console.log(err);
 		if (artist){
 			console.log('artist was already in DB');
-			return res.redirect('/')
+			return res.redirect('/');
 		} else {
 			var lyricsArray = [];
 			var i = 0;
@@ -102,7 +102,7 @@ app.get('/:artist?', function(req, res){
 							if(lyricsArray.length == 10){ //will only log if all 10 songs have been pushed to array
 								console.log("GOT ALL 10 LYRICS");
 								var JSONLyrics = JSON.stringify(lyricsArray);
-								console.log(JSONLyrics);
+								//console.log(JSONLyrics);
 								// if artist exists, update,
 								// otherwise create a new one
 								// behavior will change later when we
@@ -117,6 +117,29 @@ app.get('/:artist?', function(req, res){
 										else
 											console.log("Artist sucessfuly saved");
 									});
+								var lyrics = JSONLyrics;
+			//lyrics = lyrics.replace("\n", "<br />");
+			//console.log(lyrics);
+			var lyr = lyrics.split(/ |\n/);
+			var lyr_sorted = [];
+			for (var i = 0; i < lyr.length; i++) {
+				lyr_sorted.push(lyr[i].replace(/[^a-zA-Z]/g, "").toLowerCase());
+			}
+			lyr_sorted.sort();
+			var l = count(lyr_sorted);
+			l=_.omit(l, '', 'a', 'the');
+			l=_.omit(l, function(value, key, object) {
+				return _.isEqual(value, 1);
+			});
+			var chart=[{
+				x:[],
+				y:[],
+				type:'bar'
+			}];
+			chart[0].x = Object.keys(l);
+			chart[0].y =_.values(l);
+			console.log(chart);
+			res.render('default', {'title': artistName, 'lyrics': "Top 10 songs", 'chart': chart});
 							}
 						});
 					}
