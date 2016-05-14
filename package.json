@@ -10,6 +10,7 @@
     "ejs": "^2.4.1",
     "express": "^4.13.4",
     "lastfmapi": "^0.1.1",
+    "mongoose": "^4.4.17",
     "musicmatch": "^0.2.5",
     "promise": "^7.1.1",
     "scraperjs": "^1.2.0",
