@@ -5,6 +5,16 @@ var scraperjs = require('scraperjs');
 var _ = require('underscore');
 var lastfm = require('lastfmapi');
 var Promise = require('promise');
+var async = require('async');
+var combinedString;
+var database = require('./database');
+var mongoose = require('mongoose'); // for the database
+mongoose.connect(database.url);
+var Artist = require('./models/Artist.js');
+
+
+
+
 
 lfm = new lastfm({
 	'api_key' : '0989b876a250ebf487e96365832bde72',
@@ -51,35 +61,56 @@ function getTracks(artistName){
 
 function getLyrics(artistName, songName){
 	return new Promise(function(res, rej){
-		music.matcherLyrics({q_track:songName,q_artist:artistName})
+		music.trackSearch({q: songName, q_artist: artistName})
 			.then(function(data){
-			res(data.message.body.lyrics.lyrics_body);
+				trackList = data.message.body.track_list;
+				trackID = trackList[0].track.track_id;
+				music.trackLyrics({track_id: trackID}).then(function(data){
+				res(data.message.body.lyrics.lyrics_body);
 			}).catch(function(err){
 			rej(err);
-})
+				})
+			});
 	});
 }
 
 app.get('/:artist?', function(req, res){
+	var lyricsArray = [];
 	var i = 0;
 	console.log("ARTIST TOP 10");
 	var artistName = req.params.artist;
 	var tracksPromise = getTracks(artistName);
-	// var lyricsPromise = getLyrics("Kanye", "Power");
+	// var lyricsPromise = getLyrics("Kanye West", "Heartless");
 	// lyricsPromise.then(function(response){
 	// 	console.log(response);
 	// })
-	tracksPromise.then(function(response){
-		response.forEach(function(listItem, index){
+	tracksPromise.then(function(topTracksList){
+		// console.log(topTracksList);
+		topTracksList.forEach(function(songName, index){
 			if(index < 10){
-				// console.log(listItem);
-				var lyricsPromise = getLyrics(artistName, listItem);
-				lyricsPromise.then(function(response){
-					console.log("SONG NAME: " + listItem);
-					console.log ("=======")
-					console.log(response);
-					console.log("========");
-				})
+				var lyricsPromise = getLyrics(artistName, songName);
+				lyricsPromise.then(function(songLyrics, rej){
+					lyricsArray.push(songLyrics); //pushes lyrics into array
+					if(lyricsArray.length == 10){ //will only log if all 10 songs have been pushed to array
+						console.log("GOT ALL 10 LYRICS");
+						var JSONLyrics = JSON.stringify(lyricsArray);
+						console.log(JSONLyrics);
+                        // if artist exists, update,
+                        // otherwise create a new one
+                        // behavior will change later when we
+                        //  have the actual word anaylsis
+                        Artist.findOneAndUpdate(
+                            {'name':artistName},
+                            {'lyrics': JSONLyrics},
+                            {upsert:true},
+                            function(err,doc){
+                                if(err)
+                                    console.log(err);
+                                else
+                                    console.log("Artist sucessfuly saved");
+                        });
+					}
+				});
 			}
 		})
 	});
@@ -134,9 +165,19 @@ app.get('/:artist?', function(req, res){
 // 		);
 // });
 
-
-
 app.get('/:artist?/:name?', function(req, res){
+	// test saving code
+	//var artista = new Artist();
+	//artista.name = "test";
+	//artista.top_tracks = ['one','two','three'];
+	//artista.words = [{word: 'the', frequency: 100}];
+	//artista.save(function(err) {
+	//	if (err){
+    //
+	//	}
+	//	console.log("Test artist saved");
+	//});
+
 	var name = req.params.name;
 	var artist = req.params.artist;
 	music.trackSearch({q:name, q_artist:artist}).then(function(data){
