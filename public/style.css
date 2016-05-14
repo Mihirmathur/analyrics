@@ -1,3 +1,36 @@
 html{
-	
+ 	width: auto;
+ 	background-color: #050505;
+ 	color: white;
+ 	font-family: 'Open Sans', sans-serif;
+}
+#HEAD{
+	font-weight: 400;
+}
+.main{
+	text-align: center;
+}
+
+input[type="text"] {
+  display: block;
+  margin: 0;
+  width: 30%;
+  font-family: sans-serif;
+  font-size: 18px;
+  appearance: none;
+  box-shadow: none;
+  border-radius: none;
+}
+input[type="text"]:focus {
+  outline: none;
+}
+
+.style-2 input[type="text"] {
+  padding: 10px;
+  border: solid 5px #c9c9c9;
+  transition: border 0.3s;
+}
+.style-2 input[type="text"]:focus,
+.style-2 input[type="text"].focus {
+  border: solid 5px #969696;
 }
