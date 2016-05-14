@@ -75,44 +75,53 @@ function getLyrics(artistName, songName){
 }
 
 app.get('/:artist?', function(req, res){
-	var lyricsArray = [];
-	var i = 0;
-	console.log("ARTIST TOP 10");
 	var artistName = req.params.artist;
-	var tracksPromise = getTracks(artistName);
-	// var lyricsPromise = getLyrics("Kanye West", "Heartless");
-	// lyricsPromise.then(function(response){
-	// 	console.log(response);
-	// })
-	tracksPromise.then(function(topTracksList){
-		// console.log(topTracksList);
-		topTracksList.forEach(function(songName, index){
-			if(index < 10){
-				var lyricsPromise = getLyrics(artistName, songName);
-				lyricsPromise.then(function(songLyrics, rej){
-					lyricsArray.push(songLyrics); //pushes lyrics into array
-					if(lyricsArray.length == 10){ //will only log if all 10 songs have been pushed to array
-						console.log("GOT ALL 10 LYRICS");
-						var JSONLyrics = JSON.stringify(lyricsArray);
-						console.log(JSONLyrics);
-                        // if artist exists, update,
-                        // otherwise create a new one
-                        // behavior will change later when we
-                        //  have the actual word anaylsis
-                        Artist.findOneAndUpdate(
-                            {'name':artistName},
-                            {'lyrics': JSONLyrics},
-                            {upsert:true},
-                            function(err,doc){
-                                if(err)
-                                    console.log(err);
-                                else
-                                    console.log("Artist sucessfuly saved");
-                        });
+	// if the artist is already in db, do nothing
+	Artist.findOne({'name': artistName}, function(err,artist){
+		if(err) console.log(err);
+		if (artist){
+			console.log('artist was already in DB');
+			return res.redirect('/')
+		} else {
+			var lyricsArray = [];
+			var i = 0;
+			console.log("ARTIST TOP 10");
+			var tracksPromise = getTracks(artistName);
+			// var lyricsPromise = getLyrics("Kanye West", "Heartless");
+			// lyricsPromise.then(function(response){
+			// 	console.log(response);
+			// })
+			tracksPromise.then(function(topTracksList){
+				// console.log(topTracksList);
+				topTracksList.forEach(function(songName, index){
+					if(index < 10){
+						var lyricsPromise = getLyrics(artistName, songName);
+						lyricsPromise.then(function(songLyrics, rej){
+							lyricsArray.push(songLyrics); //pushes lyrics into array
+							if(lyricsArray.length == 10){ //will only log if all 10 songs have been pushed to array
+								console.log("GOT ALL 10 LYRICS");
+								var JSONLyrics = JSON.stringify(lyricsArray);
+								console.log(JSONLyrics);
+								// if artist exists, update,
+								// otherwise create a new one
+								// behavior will change later when we
+								//  have the actual word anaylsis
+								Artist.findOneAndUpdate(
+									{'name':artistName},
+									{'lyrics': JSONLyrics},
+									{upsert:true},
+									function(err,doc){
+										if(err)
+											console.log(err);
+										else
+											console.log("Artist sucessfuly saved");
+									});
+							}
+						});
 					}
-				});
-			}
-		})
+				})
+			});
+		}
 	});
 });
 
