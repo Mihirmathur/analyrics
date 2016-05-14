@@ -11,6 +11,7 @@
     "express": "^4.13.4",
     "lastfmapi": "^0.1.1",
     "musicmatch": "^0.2.5",
+    "path": "^0.12.7",
     "promise": "^7.1.1",
     "scraperjs": "^1.2.0",
     "underscore": "^1.8.3"

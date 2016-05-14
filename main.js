@@ -1,5 +1,6 @@
 var express = require('express');
 var http  = require('http');
+var path = require('path');
 var app = express();
 var scraperjs = require('scraperjs');
 var _ = require('underscore');
@@ -14,7 +15,7 @@ var Artist = require('./models/Artist.js');
 
 
 
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 lfm = new lastfm({
 	'api_key' : '0989b876a250ebf487e96365832bde72',
