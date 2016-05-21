@@ -13,6 +13,16 @@ html{
 	text-align: center;
 }
 
+.alt{
+	border-bottom: 1px solid #3d82c4;
+	-webkit-transition:ease all .2s;
+	padding-bottom:3px;	
+}
+
+
+.alt:hover{
+	padding-bottom:1px;	
+}
 
 p {
   text-align: center;
