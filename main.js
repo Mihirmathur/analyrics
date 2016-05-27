@@ -82,7 +82,17 @@ app.get('/:artist?', function(req, res){
 		if(err) console.log(err);
 		if (artist){
 			console.log('artist was already in DB');
-			return res.redirect('/');
+			var chart=[{
+				x:[],
+				y:[],
+				type:'bar'
+			}];
+			chart[0].x = artist.x;
+			console.log("TYPEOF X" + typeof(chart[0].x));
+			chart[0].y = artist.y;
+			console.log("TYPEOF Y" + typeof(chart[0].y));
+			console.log(chart);
+			res.render('default', {'title': artistName, 'lyrics': "Top 10 songs", 'chart': chart});
 		} else {
 			var lyricsArray = [];
 			var i = 0;
@@ -103,43 +113,49 @@ app.get('/:artist?', function(req, res){
 								console.log("GOT ALL 10 LYRICS");
 								var JSONLyrics = JSON.stringify(lyricsArray);
 								//console.log(JSONLyrics);
-								// if artist exists, update,
-								// otherwise create a new one
-								// behavior will change later when we
-								//  have the actual word anaylsis
-								Artist.findOneAndUpdate(
-									{'name':artistName},
-									{'lyrics': JSONLyrics},
-									{upsert:true},
-									function(err,doc){
-										if(err)
-											console.log(err);
-										else
-											console.log("Artist sucessfuly saved");
-									});
+
 								var lyrics = JSONLyrics;
-			//lyrics = lyrics.replace("\n", "<br />");
-			//console.log(lyrics);
-			var lyr = lyrics.split(/ |\n/);
-			var lyr_sorted = [];
-			for (var i = 0; i < lyr.length; i++) {
-				lyr_sorted.push(lyr[i].replace(/[^a-zA-Z]/g, "").toLowerCase());
-			}
-			lyr_sorted.sort();
-			var l = count(lyr_sorted);
-			l=_.omit(l, '', 'a', 'the');
-			l=_.omit(l, function(value, key, object) {
-				return _.isEqual(value, 1);
-			});
-			var chart=[{
-				x:[],
-				y:[],
-				type:'bar'
-			}];
-			chart[0].x = Object.keys(l);
-			chart[0].y =_.values(l);
-			console.log(chart);
-			res.render('default', {'title': artistName, 'lyrics': "Top 10 songs", 'chart': chart});
+                                //lyrics = lyrics.replace("\n", "<br />");
+                                //console.log(lyrics);
+                                var lyr = lyrics.split(/ |\n/);
+                                var lyr_sorted = [];
+                                for (var i = 0; i < lyr.length; i++) {
+                                    lyr_sorted.push(lyr[i].replace(/[^a-zA-Z]/g, "").toLowerCase());
+                                }
+                                lyr_sorted.sort();
+                                var l = count(lyr_sorted);
+                                l=_.omit(l, '', 'a', 'the');
+                                l=_.omit(l, function(value, key, object) {
+                                    return _.isEqual(value, 1);
+                                });
+                                var chart=[{
+                                    x:[],
+                                    y:[],
+                                    type:'bar'
+                                }];
+                                chart[0].x = Object.keys(l);
+                                chart[0].y =_.values(l);
+                                console.log(chart);
+                                // if artist exists, update,
+                                // otherwise create a new one
+                                // behavior will change later when we
+                                //  have the actual word anaylsis
+                                Artist.findOneAndUpdate(
+                                    {'name':artistName},
+                                    {'lyrics': JSONLyrics,
+										'x': chart[0].x,
+										'y': chart[0].y
+                                    },
+                                    {upsert:true, new:true},
+                                    function(err,doc){
+                                        if(err)
+                                            console.log(err);
+                                        else {
+											console.log("Succesfully inserted or updated db");
+                                            console.log(doc);
+                                        }
+                                });
+                                res.render('default', {'title': artistName, 'lyrics': "Top 10 songs", 'chart': chart});
 							}
 						});
 					}

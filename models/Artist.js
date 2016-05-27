@@ -12,7 +12,9 @@ var ArtistSchema = new Schema({
         word: String,
         frequency: Number
     }],
-    lyrics: String
+    lyrics: String,
+    x: [String],
+    y: [Number]
 });
 
 // return the model
