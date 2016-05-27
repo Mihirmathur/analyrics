@@ -20,3 +20,5 @@ var ArtistSchema = new Schema({
 // return the model
 
 module.exports = mongoose.model('Artist', ArtistSchema);
+
+
