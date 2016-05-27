@@ -301,6 +301,11 @@ form.blah{
 /*Menu bar CSS*/
 @import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900);
 
+body {
+  /*text-align: center;*/
+  margin: 0;
+}
+
 .header {
   background: rgba(0, 0, 0, 0.5);
   display: inline-block;
@@ -355,6 +360,7 @@ form.blah{
   height: 50px;
   margin: 0 auto;
   list-style-type: none;
+  padding: 0px;
 }
 .menu li {
   float: left;
