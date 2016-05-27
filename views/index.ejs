@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <!-- <script type="text/javascript" src="../../node_modules/materialize-css/dist/js/materialize.js"/> -->
 	<% include partials/head.ejs %>
 </head>
 
@@ -10,13 +12,50 @@
 
 <div id="header" class="header">
   <ul class="menu">
-    <li><a>About</a></li>
-    <li><a>Algorithm</a></li>
-    <!-- <li><a>BLah</a></li> -->
+    <!-- <li><a data-toggle="modal" data-target="#myModal">About</a></li> -->
+    <li><a data-toggle="modal" data-target="#myModal">Algorithm</a></li>
+    <li><a data-toggle="modal" data-target="#aboutModal">About</a></li>
   </ul>
 </div>
 
+<!-- <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4>Modal Header</h4>
+      <p>A bunch of text</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+    </div>
+</div> -->
+
 	<div class="main">
+  <!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  Launch demo modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <h1>Algorithm</h1>
+      <div class="modal-body">
+        Lorem Ipsum
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <h1>About</h1>
+      <div class="modal-body">
+      Lorem Ipsum
+      </div>
+    </div>
+  </div>
+</div>
 		<h1 id="HEAD"><%= title %></h1>
 		<br>
 <!--
