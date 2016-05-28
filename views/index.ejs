@@ -86,7 +86,7 @@
   <!-- <button id="moveleft" type="button">Shift</button> -->
   <div id="everything">
 	<form name="form1">
-		<input name ="input1" type="text" placeholder="Search for an artist..." />
+		<input id="artist" name ="input1" type="text" placeholder="Search for an artist..." />
 		<div name = "after1" class="after"></div>
 		<input name = "input1" type="submit" id="submit" />
 	</form>
@@ -111,14 +111,8 @@
 		m = $('h4'),
     p = $('p');
 
-  $('#moveleft').click(function() {
-        $('#everything').animate({
-        'marginLeft' : "-=30px" //moves left
-        });
-    });
-
 p.on('click', function(){
-  $("div.songPrompt").replaceWith('<input class = "input2" name="input2" type="text" placeholder="Search for a song..." /><div name="after2" class="after"></div>');
+  $("div.songPrompt").replaceWith('<input id = "songName" class = "input2" name="input2" type="text" placeholder="Search for a song..." /><div name="after2" class="after"></div>');
   if( f2.hasClass('open') ) return;
   f2.addClass('in');
   setTimeout(function(){
@@ -168,6 +162,8 @@ f1.submit(function(e){
     f1.removeClass('explode');
     m.removeClass('show');
   }, 3000);
+  var artist = $('#artist').val();
+  window.location.href = '/' + artist;
 })
 
 f2.submit(function(e){
@@ -179,13 +175,21 @@ f2.submit(function(e){
     f2.removeClass('explode');
     m.removeClass('show');
   }, 3000);
+  var artist = $('#artist').val();
+  var song = $('#songName').val();
+  window.location.href = '/'+ artist +'/'+song;
 })
 
-	$('#submit').click(function(){
-		var artist = $('#artist').val();
-		var song = $('#song').val();
-		window.location.href = '/'+artist+'/'+song;
-	});
+
+  // $("#artist").submit(function(event){
+  //   alert("Submit");
+  // });
+
+	// $('#submit').click(function(){
+	// 	var artist = $('#artist').val();
+	// 	var song = $('#song').val();
+		// window.location.href = '/'+artist+'/'+song;
+	// });
 
 </script>
 </html>
